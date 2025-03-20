@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            padding-top: 20px;
+        }
+
+        h1 {
+            color: #4682B4;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #d3d3d3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            color: #495057;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #5bc0de;
+            border-color: #46b8da;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #4682B4;
+            border-color: #357ebd;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+         .skill-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .skill-checkbox label {
+            margin-left: 10px;
+            font-weight: normal;
+        }
+          /* Обертка для элементов управления */
+        .controls-wrapper {
+            display: flex;
+            flex-direction: column; /* Размещаем элементы в столбик */
+            align-items: center; /* Выравниваем по центру */
+            margin-bottom: 20px; /* Отступ снизу */
+        }
+
+        /* Убираем отступы и выравниваем элементы формы */
+        .controls-wrapper form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%; /* Растягиваем форму на всю ширину контейнера */
+        }
+
+        .controls-wrapper .form-group {
+            width: 100%;
+            margin-bottom: 15px; /* Чуть больше отступ между элементами формы */
+        }
+
+        /* Растягиваем select на всю доступную ширину */
+        .controls-wrapper .form-control {
+            width: 100%;
+        }
+         /* Отступ после формы "Show Recommendations" */
+        .recommendations-form {
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Новый студент</h1>
+
+         <!-- Форма для выбора студента и просмотра рекомендаций -->
+        <div class="controls-wrapper">
+            <form method="GET" action="/recommendations" class="recommendations-form">
+                <div class="form-group">
+                    <label for="student_id">Выберите студента:</label>
+                    <select class="form-control" id="student_id" name="student_id">
+                        {% for student in students %}
+                            <option value="{{ student.id }}">{{ student.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Рекомендации</button>
+            </form>
+        </div>
+
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.full_name.label }}
+                {{ form.full_name(class="form-control") }}
+                {% if form.full_name.errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.full_name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.skills.label }}
+                {{ form.skills(class="form-control", multiple=True) }}
+                {% if form.skills.errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.skills.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

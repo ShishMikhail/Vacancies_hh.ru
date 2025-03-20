@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vacancies</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Общие стили */
+        body {
+            display: flex;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa; /* Светло-серый фон */
+            color: #333; /* Темно-серый текст */
+        }
+
+        .container {
+            padding-top: 20px;
+            max-width: 1200px; /* Ограничиваем ширину контента для удобства чтения */
+        }
+
+        h1 {
+            color: #4682B4; /* Сине-серый заголовок */
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Стили для боковой панели навигации */
+        .sidebar {
+            width: 200px;
+            background-color: #f4f4f4;
+            padding: 10px;
+            box-shadow: 2px 0px 5px rgba(0,0,0,0.1);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 15px;
+            display: block;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+
+        /* Стили для карточек */
+        .card {
+            background-color: #fff; /* Белый фон карточки */
+            border: 1px solid #d3d3d3; /* Светло-серая рамка */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Мягкая тень */
+            transition: transform 0.2s ease-in-out; /* Плавная анимация при наведении */
+            /* Фиксированные размеры */
+            width: 350px; /* Задайте желаемую ширину */
+            height: 550px; /* Задайте желаемую высоту */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* Подъем карточки при наведении */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Более выраженная тень при наведении */
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: #343a40; /* Темный цвет заголовка карточки */
+        }
+
+        .card-text {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #6c757d; /* Серый цвет текста */
+        }
+
+        /* Стили для списка навыков */
+        .skills-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .skills-list li {
+            display: inline-block;
+            background-color: #D1E8E2; /* Пастельный зелено-голубой цвет */
+            color: #495057; /* Темно-серый цвет текста навыка */
+            padding: 6px 12px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #a8dadc; /* Рамка в тон фона */
+        }
+
+        /* Стили для кнопок */
+        .btn-primary,
+        .btn-clear-filters,
+        .btn-turquoise {
+            color: #fff; /* Белый текст на кнопках */
+            background-color: #5bc0de; /* Яркий голубой */
+            border-color: #46b8da;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover,
+        .btn-clear-filters:hover,
+        .btn-turquoise:hover {
+            background-color: #4682B4; /* Сине-серый при наведении */
+            border-color: #357ebd;
+            color: #fff;
+        }
+
+        /* Стили для фильтра */
+        .filter-container {
+            background-color: #f0f8ff; /* Светлый оттенок синего */
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Легкая тень для контейнера фильтров */
+            border: 1px solid #e1e9f5; /* Рамка для контейнера фильтров */
+        }
+
+        .filter-container label {
+            font-weight: bold;
+            color: #495057; /* Темно-серый для текста лейбла */
+        }
+
+        .filter-container select {
+            border-radius: 5px;
+            border: 1px solid #ced4da; /* Стандартный серый для рамки селекта */
+            color: #495057;
+        }
+
+        /* Стили для кнопок действий (Add Student, Recommendations) */
+        .action-buttons {
+            margin-bottom: 20px;
+            text-align: center; /* Выравниваем кнопки по центру */
+        }
+
+        /* Дополнительные стили для улучшения отзывчивости */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .col-md-4 {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            display: flex; /* Для выравнивания высоты карточек */
+        }
+
+         /* Обертка для элементов управления */
+        .controls-wrapper {
+            display: flex;
+            flex-direction: column; /* Размещаем элементы в столбик */
+            align-items: center; /* Выравниваем по центру */
+            margin-bottom: 20px; /* Отступ снизу */
+        }
+
+        /* Убираем отступы и выравниваем элементы формы */
+        .controls-wrapper form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%; /* Растягиваем форму на всю ширину контейнера */
+        }
+
+        .controls-wrapper .form-group {
+            width: 100%;
+            margin-bottom: 15px; /* Чуть больше отступ между элементами формы */
+        }
+
+        /* Растягиваем select на всю доступную ширину */
+        .controls-wrapper .form-control {
+            width: 100%;
+        }
+
+        /* Отступ после кнопки "Add Student" */
+        .add-student-button {
+            margin-bottom: 20px;
+        }
+
+         /* Filter container adjustments */
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        /* Style for filter label */
+        .filter-label {
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        /* Adjust styles for buttons */
+        .filter-buttons {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+         /* Form group for select */
+        .filter-container .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Контейнер с учетом боковой панели */
+        .content-with-sidebar {
+            margin-left: 220px; /* Учитываем ширину боковой панели */
+            padding: 20px;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/salary_dashboard">Средняя зарплата по направлению</a></li>
+            <li><a href="/vacancy_count_dashboard">Количество вакансий по направлению</a></li>
+        </ul>
+    </div>
+
+    <div class="content-with-sidebar">
+        <div class="container">
+            <h1>Вакансии</h1>
+
+            <!-- Обертка для элементов управления -->
+            <div class="controls-wrapper">
+                <a href="/add_student" class="btn btn-primary add-student-button">Добавить студента</a>
+                <div class="filter-container">
+                    <label for="skill_categories" class="filter-label">Фильтр:</label>
+                    <form method="GET" action="/">
+                        <div class="form-group">
+                            <select class="form-control" id="skill_categories" name="skill_categories" multiple>
+                                {% for skill_category in all_skills.keys() %}
+                                <option value="{{ skill_category }}" {% if skill_category in selected_categories %}selected{% endif %}>{{ skill_category }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="filter-buttons">
+                            <button type="submit" class="btn btn-primary">Применить</button>
+                            <a href="/" class="btn btn-clear-filters">Очистить</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row">
+                {% for vacancy in vacancies %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ vacancy.name }}</h5>
+                            <p class="card-text"><strong>Компания:</strong> {{ vacancy.employer }}</p>
+                            <p class="card-text"><strong>Зарплата:</strong> {% if vacancy.salary_from %}{{ vacancy.salary_from }}{% else %}Не указано{% endif %}</p>
+                            <p class="card-text"><strong>Опыт:</strong> {{ vacancy.experience }}</p>
+                            <p class="card-text"><strong>Опубликовано:</strong> {{ vacancy.published_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            <p class="card-text"><strong>Навыки:</strong></p>
+                            <ul class="skills-list">
+                                {% if vacancy.skills %}
+                                {% for skill in vacancy.skills[:5] %}
+                                <li>{{ skill }}</li>
+                                {% endfor %}
+                                {% else %}
+                                <li>Не указано</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <a href="/vacancy/{{ vacancy.id }}" class="btn btn-turquoise mt-auto">Подробнее</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

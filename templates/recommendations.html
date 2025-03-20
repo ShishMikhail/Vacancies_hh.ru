@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations for {{ student.full_name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Общие стили */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa; /* Светло-серый фон */
+            color: #333; /* Темно-серый текст */
+        }
+
+        .container {
+            padding-top: 20px;
+        }
+
+        h1 {
+            color: #4682B4; /* Сине-серый заголовок */
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Стили для карточек */
+        .card {
+            background-color: #fff; /* Белый фон карточки */
+            border: 1px solid #d3d3d3; /* Светло-серая рамка */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Мягкая тень */
+            transition: transform 0.2s ease-in-out; /* Плавная анимация при наведении */
+            height: 100%; /* Чтобы все карточки были одной высоты */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* Подъем карточки при наведении */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Более выраженная тень при наведении */
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: #343a40; /* Темный цвет заголовка карточки */
+        }
+
+        .card-text {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #6c757d; /* Серый цвет текста */
+        }
+
+        /* Стили для списка навыков */
+        .skills-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .skills-list li {
+            display: inline-block;
+            background-color: #D1E8E2; /* Пастельный зелено-голубой цвет */
+            color: #495057; /* Темно-серый цвет текста навыка */
+            padding: 6px 12px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #a8dadc; /* Рамка в тон фона */
+        }
+
+        /* Стили для кнопок */
+        .btn-primary,
+        .btn-clear-filters,
+        .btn-turquoise {
+            color: #fff; /* Белый текст на кнопках */
+            background-color: #5bc0de; /* Яркий голубой */
+            border-color: #46b8da;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover,
+        .btn-clear-filters:hover,
+        .btn-turquoise:hover {
+            background-color: #4682B4; /* Сине-серый при наведении */
+            border-color: #357ebd;
+            color: #fff;
+        }
+
+        /* Стили для фильтра */
+        .filter-container {
+            background-color: #f0f8ff; /* Светлый оттенок синего */
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Легкая тень для контейнера фильтров */
+            border: 1px solid #e1e9f5; /* Рамка для контейнера фильтров */
+        }
+
+        .filter-container label {
+            font-weight: bold;
+            color: #495057; /* Темно-серый для текста лейбла */
+        }
+
+        .filter-container select {
+            border-radius: 5px;
+            border: 1px solid #ced4da; /* Стандартный серый для рамки селекта */
+            color: #495057;
+        }
+
+        /* Дополнительные стили для улучшения отзывчивости */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .col-md-4 {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-bottom: 20px;
+            display: flex; /* Для выравнивания высоты карточек */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Вакансии для {{ student.full_name }}</h1>
+
+        <div class="row">
+            {% for recommendation in recommendations %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recommendation.name }}</h5>
+                            <p class="card-text"><strong>Employer:</strong> {{ recommendation.employer }}</p>
+                            <p class="card-text"><strong>Salary:</strong> {% if recommendation.salary_from %}{{ recommendation.salary_from }}{% else %}Не указано{% endif %}</p>
+                            <p class="card-text"><strong>Experience:</strong> {{ recommendation.experience }}</p>
+                            <p class="card-text"><strong>Description:</strong> {{ recommendation.description | safe if recommendation.description else "Не указано" }}</p>
+                            <p class="card-text"><strong>Published:</strong> {{ recommendation.published_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            <p class="card-text"><strong>Skills:</strong></p>
+                            <ul class="skills-list">
+                                {% if recommendation.skills %}
+                                    {% for skill in recommendation.skills %}
+                                        <li>{{ skill }}</li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li>Не указано</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <a href="/vacancy/{{ recommendation.id }}" class="btn btn-turquoise mt-auto">Подробнее</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Средняя зарплата по направлению</title>
+</head>
+<body>
+    <h1>Средняя зарплата по направлению</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Навык</th>
+                <th>Средняя зарплата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in skills_with_salary %}
+            <tr>
+                <td>{{ item.skill }}</td>
+                <td>{{ item.avg_salary }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('index') }}">На главную</a>
+</body>
+</html>

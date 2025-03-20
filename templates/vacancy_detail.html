@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ vacancy.name }} - Vacancy Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .card {
+            background-color: #b0e0e6; /* Light blue (turquoise-ish) */
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            font-size: 1.5rem; /* Increased size for detail page */
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1.1rem; /* Increased size for detail page */
+        }
+        .skills-list {
+            list-style: none;
+            padding: 0;
+        }
+        .skills-list li {
+            display: inline-block;
+            background-color: #add8e6; /* Light blue for skill tags */
+            color: #333;
+            padding: 5px 10px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .btn-turquoise {
+            background-color: #70dbdb; /* Turquoise color */
+            border-color: #70dbdb;
+            color: #fff; /* White text */
+        }
+
+        .btn-turquoise:hover {
+            background-color: #4682b4; /* Darker shade on hover */
+            border-color: #4682b4;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ vacancy.name }}</h1>
+                <p class="card-text"><strong>Компания:</strong> {{ vacancy.employer }}</p>
+                <p class="card-text"><strong>Зарплата:</strong> {% if vacancy.salary_from %}{{ vacancy.salary_from }}{% else %}Не указано{% endif %}</p>
+                <p class="card-text"><strong>Опыт:</strong> {% if vacancy.experience %}{{ vacancy.experience }}{% else %}Не указано{% endif %}</p>
+                <p class="card-text"><strong>Описание:</strong> {{ vacancy.description | safe if vacancy.description else "Не указано" }}</p>
+                <p class="card-text"><strong>Опубликовано:</strong> {{ vacancy.published_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                <p class="card-text"><strong>Навыки:</strong></p>
+                <ul class="skills-list">
+                    {% if vacancy.skills %}
+                        {% for skill in vacancy.skills %}
+                            <li>{{ skill }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>Не указано</li>
+                    {% endif %}
+                </ul>
+                <a href="/" class="btn btn-turquoise">Назад к вакансиям</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
